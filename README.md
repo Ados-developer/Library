@@ -11,7 +11,7 @@ It allows managing books, readers, and loans, with core features for borrowing a
 
 ## 🖥️ Preview
 
-![App Screenshot](./assets/banner.png)
+![App Screenshot](./Assets/banner.png)
 
 ## 🚀 How to Run the Project
 
