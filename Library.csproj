@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\" />
     <Folder Include="Repositories\sql\" />
     <Folder Include="Views\Reader\" />
   </ItemGroup>
