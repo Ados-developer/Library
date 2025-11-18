@@ -1,0 +1,37 @@
+﻿@using Library.ViewModels
+@model List<AllLoansViewModel>
+<div class="text-center">
+    <h1>List of loans</h1>
+</div>
+<table class="table">
+    <colgroup>
+        <col style="width: 20%;">
+        <col style="width: 20%;">
+        <col style="width: 20%;">
+        <col style="width: 20%;">
+        <col style="width: 20%;">
+    </colgroup>
+    <thead>
+        <tr class="trRow">
+            <th scope="col" class="text-left" style="padding-left:20px;">#</th>
+            <th scope="col" class="text-center d-none d-md-table-cell">Loan from</th>
+            <th scope="col" class="text-center d-none d-md-table-cell">Loan to</th>
+            <th scope="col" class="text-center">Book</th>
+            <th scope="col" class="text-center">Reader</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var loan in Model)
+        {
+            <tr class="trRow">
+                <th class="text-left" style="padding-left:20px;">@loan.LoanId</th>
+                <td class="text-center d-none d-md-table-cell">@loan.LoanDate</td>
+                <td class="text-center d-none d-md-table-cell">@loan.ReturnDate</td>
+                <td class="text-center">@loan.Book!.Title</td>
+                <td class="text-center">
+                    @loan.Reader!.FirstName @loan.Reader.LastName
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,46 @@
+﻿@using Library.ViewModels
+@model List<ReaderViewModel>
+<div class="text-center">
+    <h1>List of readers</h1>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+    <a asp-action="AddRecord" asp-controller="Reader" class="hero-btn hero-btn-primary">Add reader</a>
+</div>
+    <table class="table">
+        <colgroup>
+            <col style="width: 20%;">
+            <col style="width: 25%;">
+            <col style="width: 25%;">
+            <col style="width: 15%;">
+            <col style="width: 15%;">
+        </colgroup>
+        <thead>
+            <tr class="trRow">
+                <th scope="col" class="text-left d-none d-md-table-cell" style="padding-left:20px;">Number of ID card</th>
+                <th scope="col" class="text-center">Name</th>
+                <th scope="col" class="text-center">Surname</th>
+            <th scope="col" class="text-center d-none d-sm-table-cell">Date of birth</th>
+                <th scope="col" class="text-center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reader in Model)
+            {
+                <tr class="trRow">
+                    <th class="text-left d-none d-md-table-cell" style="padding-left:20px;">@reader.CardId</th>
+                    <td class="text-center">@reader.FirstName</td>
+                    <td class="text-center">@reader.LastName</td>
+                <td class="text-center d-none d-sm-table-cell">@reader.DateOfBirth.ToString("dd.MM.yyyy")</td>
+                    <td class="text-center">
+                        <a asp-action="EditRecord" asp-controller="Reader" asp-route-id="@reader.CardId" class="icon-btn icon-btn-primary"><i class="fas fa-edit"></i></a>
+                        <a asp-action="DeleteRecord" asp-controller="Reader" asp-route-id="@reader.CardId" class="icon-btn icon-btn-danger"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+

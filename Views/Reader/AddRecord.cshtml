@@ -1,0 +1,34 @@
+﻿@using Library.ViewModels
+@model ReaderViewModel
+<div class="text-center">
+    <h1>Add Reader</h1>
+    <form asp-action="AddRecord" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label asp-for="CardId" class="form-label"></label>
+            <input class="form-control" asp-for="CardId" />
+            <span asp-validation-for="CardId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input class="form-control" asp-for="FirstName" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input class="form-control" asp-for="LastName" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DateOfBirth" class="form-label"></label>
+            <input class="form-control" type="date" asp-for="DateOfBirth" value="@DateTime.Today.ToString("yyyy-MM-dd")" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+        <button type="submit" class="hero-btn hero-btn-primary">Add</button>
+        <a asp-action="GetRecords" asp-controller="Reader" class="hero-btn hero-btn-primary">Back</a>
+    </form>
+</div>

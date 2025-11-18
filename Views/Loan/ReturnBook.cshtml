@@ -1,0 +1,125 @@
+﻿@using Library.ViewModels
+@model ReturnViewModel
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+<form asp-action="ReturnBook" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="BookId" />
+    <div class="row">
+        <div class="col-md-12 selectBook">
+            <h3 style="text-align:center;">Choose a book to return</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.BorrowedBook != null && Model.BorrowedBook.Any())
+                    {
+                        foreach (var book in Model.BorrowedBook)
+                        {
+                            <tr class="book-row">
+                                <td class="book-order">@book.Id</td>
+                                <td class="book-title">@book.Title</td>
+                                <td class="book-author">@book.Author</td>
+                                <td class="book-id"><a class="icon-btn icon-btn-primary addBookBtn" data-id="@book.Id"><i class="fas fa-plus"></i></a></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                No books can be returned at this time.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 selectedBook">
+            <h3 style="text-align:center;">Do you want to return this book?</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="selectedBookId"></td>
+                        <td class="selectedBookTitle"></td>
+                        <td class="selectedBookAuthor"></td>
+                        <td><a class="icon-btn icon-btn-danger btn-delete-book"><i class="fas fa-trash-alt"></i></a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <button type="submit" class="hero-btn hero-btn-primary" id="submitBtn">Return</button>
+    </div>
+</form>
+<script>
+    document.addEventListener("DOMContentLoaded", function (){
+        const addBookButtons = document.querySelectorAll(".addBookBtn");
+        const hiddenBookId = document.getElementById("BookId");
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.classList.add("d-none");
+        const selectedBook = document.querySelector(".selectedBook");
+        selectedBook.classList.add("d-none")
+        const selectBook = document.querySelector(".selectBook")
+        const selectedBookId = document.querySelector(".selectedBookId");
+        const selectedBookTitle = document.querySelector(".selectedBookTitle");
+        const selectedBookAuthor = document.querySelector(".selectedBookAuthor");
+        hiddenBookId.value = "";
+        addBookButtons.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const bookRow = btn.closest(".book-row")
+                const bookId = btn.dataset.id
+                const title = bookRow.querySelector(".book-title").innerText
+                const author = bookRow.querySelector(".book-author").innerText
+                const order = bookRow.querySelector(".book-order").innerText
+                const bookConfirmed = confirm(`Selected book: ${title}?`);
+                if(bookConfirmed){
+                    hiddenBookId.value = bookId
+                    selectedBookId.innerText = order
+                    selectedBookTitle.innerText = title
+                    selectedBookAuthor.innerText = author
+                    selectedBook.classList.remove("d-none")
+                    selectBook.classList.add("d-none")
+                    checkSubmitVisibility();
+                }
+            })
+        })
+        const btnDeleteBook = document.querySelector(".btn-delete-book");
+        btnDeleteBook.addEventListener("click", (e) => {
+            e.preventDefault();
+            selectedBook.classList.add("d-none");
+            selectBook.classList.remove("d-none");
+            hiddenBookId.value = "";
+            checkSubmitVisibility();
+        })
+        function checkSubmitVisibility() {
+        if (
+            selectBook.classList.contains("d-none")
+        ) {
+            submitBtn.classList.remove("d-none");
+        } else {
+            submitBtn.classList.add("d-none");
+        }
+    }
+    })
+</script>

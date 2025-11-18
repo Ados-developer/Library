@@ -1,0 +1,24 @@
+﻿@using Library.ViewModels
+@model BookViewModel
+<div class="text-center">
+    <h1>Delete book</h1>
+    <p>Do you want to remove this book?</p>
+    <form asp-action="ConfirmDelete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="IsBorrowed" />
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label"></label>
+            <input class="form-control" asp-for="Title" readonly />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Author" class="form-label"></label>
+            <input class="form-control" asp-for="Author" readonly />
+            <span asp-validation-for="Author" class="text-danger"></span>
+        </div>
+        <button type="submit" class="hero-btn hero-btn-danger">Delete</button>
+        <a asp-action="GetRecords" asp-controller="Book" class="hero-btn hero-btn-primary">Back</a>
+    </form>
+</div>

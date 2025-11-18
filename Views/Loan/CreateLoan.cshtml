@@ -1,0 +1,222 @@
+﻿@using Library.ViewModels
+@model LoanViewModel
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+<form asp-action="CreateLoan" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="LoanId" />
+    <input type="hidden" asp-for="BookId" />
+    <input type="hidden" asp-for="ReaderCardId" />
+    <div class="row">
+        <div class="col-md-6 selectBook">
+            <h2 style="text-align:center;">choose a book</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.AvailableBooks != null && Model.AvailableBooks.Any())
+                    {
+                        foreach (var book in Model.AvailableBooks)
+                        {
+                            <tr class="book-row">
+                                <td class="book-order">@book.Id</td>
+                                <td class="book-title">@book.Title</td>
+                                <td class="book-author">@book.Author</td>
+                                <td class="book-id"><a class="icon-btn icon-btn-primary addBookBtn" data-id="@book.Id"><i class="fas fa-plus"></i></a></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No books are currently available for loan.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6 selectedBook text-center">
+                <h2 style="text-align:center;">Selected book</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Author</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="selectedBookId"></td>
+                            <td class="selectedBookTitle"></td>
+                            <td class="selectedBookAuthor"></td>
+                            <td><a class="icon-btn icon-btn-danger btn-delete-book"><i class="fas fa-trash-alt"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+        <div class="col-md-6 selectReader">
+            <h2 style="text-align:center;">Choose a reader</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Number of ID card</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Surname</th>
+                        <th scope="col">Date of birth</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Readers != null && Model.Readers.Any())
+                    {
+                        foreach (var reader in Model.Readers)
+                        {
+                            <tr class="reader-row">
+                                <td class="reader-order">@reader.CardId</td>
+                                <td class="reader-name">@reader.FirstName</td>
+                                <td class="reader-surname">@reader.LastName</td>
+                                <td class="reader-birthday">@reader.DateOfBirth.ToString("dd.MM.yyyy")</td>
+                                <td class="reader-id"><a class="icon-btn icon-btn-primary addReaderBtn" data-id="@reader.CardId" ><i class="fas fa-plus"></i></a></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No readers</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6 selectedReader text-center">
+            <h2 style="text-align:center;">Selected reader</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Number of ID card</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Surname</th>
+                        <th scope="col">Date of birth</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="selectedReaderId"></td>
+                        <td class="selectedReaderName"></td>
+                        <td class="selectedReaderSurname"></td>
+                        <td class="selectedReaderBirthday"></td>
+                        <td><a class="icon-btn icon-btn-danger btn-delete-reader"><i class="fas fa-trash-alt"></i></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <button type="submit" class="hero-btn hero-btn-primary" id="submitBtn">Borrow</button>
+    </div>
+</form>
+<script>
+    document.addEventListener("DOMContentLoaded", function (){
+        const selectedBook = document.querySelector(".selectedBook");
+        const selectBook = document.querySelector(".selectBook");
+        selectedBook.classList.add("d-none");
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.classList.add("d-none");
+        const btnDeleteBook = document.querySelector(".btn-delete-book");
+        const selectedBookId = document.querySelector(".selectedBookId");
+        const selectedBookTitle = document.querySelector(".selectedBookTitle");
+        const selectedBookAuthor = document.querySelector(".selectedBookAuthor");
+        const addBookButtons = document.querySelectorAll(".addBookBtn");
+        const hiddenBookId = document.getElementById("BookId");
+        hiddenBookId.value = "";
+        addBookButtons.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const bookRow = btn.closest(".book-row")
+                const bookId = btn.dataset.id
+                const title = bookRow.querySelector(".book-title").innerText
+                const author = bookRow.querySelector(".book-author").innerText
+                const order = bookRow.querySelector(".book-order").innerText
+                const bookConfirmed = confirm(`Selected book: ${title}?`);
+                if(bookConfirmed){
+                    hiddenBookId.value = bookId
+                    selectedBookId.innerText = order
+                    selectedBookTitle.innerText = title
+                    selectedBookAuthor.innerText = author
+                    selectedBook.classList.remove("d-none")
+                    selectBook.classList.add("d-none")
+                    checkSubmitVisibility();
+                }
+            })
+        })
+        btnDeleteBook.addEventListener("click", (e) => {
+            e.preventDefault();
+            selectedBook.classList.add("d-none");
+            selectBook.classList.remove("d-none");
+            hiddenBookId.value = "";
+            checkSubmitVisibility();
+        })
+        const selectedReader = document.querySelector(".selectedReader");
+        const selectReader = document.querySelector(".selectReader");
+        selectedReader.classList.add("d-none");
+        const btnDeleteReader = document.querySelector(".btn-delete-reader");
+        const selectedReaderId = document.querySelector(".selectedReaderId");
+        const selectedReaderName = document.querySelector(".selectedReaderName");
+        const selectedReaderSurname = document.querySelector(".selectedReaderSurname");
+        const selectedReaderBirthday = document.querySelector(".selectedReaderBirthday");
+        const addReaderButtons = document.querySelectorAll(".addReaderBtn");
+        const hiddenReaderCardId = document.getElementById("ReaderCardId");
+        hiddenReaderCardId.value = "";
+        addReaderButtons.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const readerRow = btn.closest(".reader-row")
+                const readerCardId = btn.dataset.id
+                const name = readerRow.querySelector(".reader-name").innerText
+                const surname = readerRow.querySelector(".reader-surname").innerText
+                const birthday = readerRow.querySelector(".reader-birthday").innerText
+                const order = readerRow.querySelector(".reader-order").innerText
+                const readerConfirmed = confirm(`Selected reader: ${name} ${surname}?`);
+                if(readerConfirmed){
+                    hiddenReaderCardId.value = readerCardId
+                    selectedReaderId.innerText = order
+                    selectedReaderName.innerText = name
+                    selectedReaderSurname.innerText = surname
+                    selectedReaderBirthday.innerText = birthday
+                    selectedReader.classList.remove("d-none")
+                    selectReader.classList.add("d-none")
+                    checkSubmitVisibility();
+                }
+            })
+        })
+        btnDeleteReader.addEventListener("click", (e) => {
+            e.preventDefault();
+            selectedReader.classList.add("d-none");
+            selectReader.classList.remove("d-none");
+            hiddenReaderCardId.value = "";
+            checkSubmitVisibility();
+        })
+        function checkSubmitVisibility() {
+        if (
+            selectReader.classList.contains("d-none") &&
+            selectBook.classList.contains("d-none")
+        ) {
+            submitBtn.classList.remove("d-none");
+        } else {
+            submitBtn.classList.add("d-none");
+        }
+    }
+    })
+</script>

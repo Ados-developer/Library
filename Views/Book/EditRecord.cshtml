@@ -1,0 +1,23 @@
+﻿@using Library.ViewModels
+@model BookViewModel
+<div class="text-center">
+    <h1>Edit book</h1>
+    <form asp-action="EditRecord" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="IsBorrowed" />
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label"></label>
+            <input class="form-control" asp-for="Title" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Author" class="form-label"></label>
+            <input class="form-control" asp-for="Author" />
+            <span asp-validation-for="Author" class="text-danger"></span>
+        </div>
+        <button type="submit" class="hero-btn hero-btn-primary">Edit</button>
+        <a asp-action="GetRecords" asp-controller="Book" class="hero-btn hero-btn-primary">Back</a>
+    </form>
+</div>

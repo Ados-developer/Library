@@ -1,0 +1,45 @@
+﻿@using Library.ViewModels
+@model List<BookViewModel>
+<div class="text-center">
+    <h1>List of books</h1>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+    <a asp-action="AddRecord" asp-controller="Book" class="hero-btn hero-btn-primary">Add book</a>
+</div>
+<table class="table">
+    <colgroup>
+        <col style="width: 5%;"> 
+        <col style="width: 40%;">       
+        <col style="width: 30%;">  
+        <col style="width: 10%;">   
+        <col style="width: 15%;">
+    </colgroup>
+    <thead>
+        <tr class="trRow"> 
+            <th scope="col" class="text-center d-none d-md-table-cell">#</th>
+            <th scope="col" class="text-left" style="padding-left:20px;">Title</th>
+            <th scope="col" class="text-center d-none d-sm-table-cell">Author</th>
+            <th scope="col" class="text-center">Is borrowed</th>
+            <th scope="col" class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr class="trRow">
+                <th class="text-center d-none d-md-table-cell">@book.Id</th>
+                <td class="text-left" style="padding-left:20px;">@book.Title</td>
+                <td class="text-center d-none d-sm-table-cell">@book.Author</td>
+                <td class="text-center">@(book.IsBorrowed? book.BorrowedBy: "No")</td>
+                <td class="text-center">
+                    <a asp-action="EditRecord" asp-controller="Book" asp-route-id="@book.Id" class="icon-btn icon-btn-primary"><i class="fas fa-edit"></i></a>
+                    <a asp-action="DeleteRecord" asp-controller="Book" asp-route-id="@book.Id" class="icon-btn icon-btn-danger"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
