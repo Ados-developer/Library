@@ -11,14 +11,14 @@ It allows managing books, readers, and loans, with core features for borrowing a
 
 ## 🖥️ Preview
 
-![App Screenshot](./assets/banner.png)
+![App Screenshot](./Assets/banner.png)
 
 ## 🚀 How to Run the Project
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Ados-developer/ProfileEditor.git
-cd ProfileEditor
+git clone https://github.com/Ados-developer/Library.git
+cd Library
 ```
 ### 2. Database
   1. In SQL Server Management Studio 20, create a new database.
