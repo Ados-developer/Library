@@ -1,9 +1,9 @@
-﻿@using Library.ViewModels
-@model ReturnViewModel
+﻿@using Library.Models
+@model ReturnBookModel
 
 @if (TempData["Success"] != null)
 {
-    <div class="alert alert-success">
+    <div class="alert alert-success text-center">
         @TempData["Success"]
     </div>
 }

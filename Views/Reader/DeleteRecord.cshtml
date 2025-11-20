@@ -1,10 +1,11 @@
-﻿@using Library.ViewModels
-@model ReaderViewModel
+﻿@using Library.Models
+@model ReaderModel
 <div class="text-center">
     <h1>Delete reader</h1>
     <p>Are you sure, do you want to delete this reader?</p>
     <form asp-action="ConfirmDelete" method="post">
         @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="CardId" />
         <div class="mb-3">
             <label asp-for="CardId" class="form-label"></label>
             <input class="form-control" asp-for="CardId" readonly />

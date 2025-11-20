@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Library.ViewModels
+namespace Library.Models
 {
-    public class BookViewModel
+    public class BookModel
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Title of Book is required.")]

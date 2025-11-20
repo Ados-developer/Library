@@ -1,13 +1,13 @@
-﻿using Library.ViewModels;
+﻿using Library.Models;
 
 namespace Library.Services
 {
     public interface ILoanService
     {
-        Task<List<AllLoansViewModel>> GetAllLoansAsync();
-        Task<LoanViewModel> PrepareLoanViewModelAsync();
+        Task<List<LoanModel>> GetAllLoansAsync();
+        Task<BorrowBookModel> PrepareBorrowBookModelAsync();
         Task BorrowBookAsync(string? readerCardId, int? bookId);
-        Task<ReturnViewModel> PrepareReturnViewModelAsync();
+        Task<ReturnBookModel> PrepareReturnBookModelAsync();
         Task ReturnBookAsync(int? bookId);
     }
 }

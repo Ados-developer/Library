@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Library.ViewModels
+namespace Library.Models
 {
-    public class ReaderViewModel
+    public class ReaderModel
     {
         [Required(ErrorMessage = "Number of ID card is required")]
         [Display(Name = "Number of ID card")]

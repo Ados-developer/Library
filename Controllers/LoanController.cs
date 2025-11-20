@@ -1,5 +1,5 @@
-﻿using Library.Services;
-using Library.ViewModels;
+﻿using Library.Models;
+using Library.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
@@ -7,31 +7,27 @@ namespace Library.Controllers
     public class LoanController : Controller
     {
         private readonly ILoanService _loanService;
-        private readonly IBookService _bookService;
-        private readonly IReaderService _readerService;
-        public LoanController(ILoanService loanService, IBookService bookService, IReaderService readerService)
+        public LoanController(ILoanService loanService)
         {
             _loanService = loanService;
-            _bookService = bookService;
-            _readerService = readerService;
         }
         public async Task<IActionResult> GetRecords()
         {
-            List<AllLoansViewModel> loans = await _loanService.GetAllLoansAsync();
+            List<LoanModel> loans = await _loanService.GetAllLoansAsync();
             return View(loans);
         }
         public async Task<IActionResult> CreateLoan()
         {
-            LoanViewModel model = await _loanService.PrepareLoanViewModelAsync();
+            BorrowBookModel model = await _loanService.PrepareBorrowBookModelAsync();
             return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateLoan(LoanViewModel model)
+        public async Task<IActionResult> CreateLoan(BorrowBookModel model)
         {
             if (!ModelState.IsValid)
             {
-                LoanViewModel viewModel = await _loanService.PrepareLoanViewModelAsync();
+                BorrowBookModel viewModel = await _loanService.PrepareBorrowBookModelAsync();
                 return View(viewModel);
             }
             try
@@ -42,22 +38,22 @@ namespace Library.Controllers
             } catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                LoanViewModel viewModel = await _loanService.PrepareLoanViewModelAsync();
+                BorrowBookModel viewModel = await _loanService.PrepareBorrowBookModelAsync();
                 return View(viewModel);
             }
         }
         public async Task<IActionResult> ReturnBook()
         {
-            ReturnViewModel model = await _loanService.PrepareReturnViewModelAsync();
+            ReturnBookModel model = await _loanService.PrepareReturnBookModelAsync();
             return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ReturnBook(ReturnViewModel model)
+        public async Task<IActionResult> ReturnBook(ReturnBookModel model)
         {
             if (!ModelState.IsValid)
             {
-                ReturnViewModel viewModel = await _loanService.PrepareReturnViewModelAsync();
+                ReturnBookModel viewModel = await _loanService.PrepareReturnBookModelAsync();
                 return View(viewModel);
             }
             try
@@ -68,7 +64,7 @@ namespace Library.Controllers
             } catch(Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                ReturnViewModel viewModel = await _loanService.PrepareReturnViewModelAsync();
+                ReturnBookModel viewModel = await _loanService.PrepareReturnBookModelAsync();
                 return View(viewModel);
             }
         }

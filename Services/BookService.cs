@@ -1,6 +1,6 @@
-﻿using Library.Models;
+﻿using Library.Entities;
 using Library.Repositories;
-using Library.ViewModels;
+using Library.Models;
 
 namespace Library.Services
 {
@@ -15,14 +15,14 @@ namespace Library.Services
             _loanRepository = loanRepository;
             _readerRepository = readerRepository;
         }
-        public async Task<BookViewModel?> GetBookByIdAsync(int id)
+        public async Task<BookModel?> GetBookByIdAsync(int id)
         {
             Book? book = await _bookRepo.GetBookByIdAsync(id);
             if(book == null)
             {
                 return null;
             }
-            BookViewModel viewModel = new BookViewModel
+            BookModel viewModel = new BookModel
             {
                 Id = book.Id,
                 Title = book.Title,
@@ -31,10 +31,10 @@ namespace Library.Services
             };
             return viewModel;
         }
-        public async Task<List<BookViewModel>> GetAllBooksAsync()
+        public async Task<List<BookModel>> GetAllBooksAsync()
         {
             List<Book> books = await _bookRepo.GetAllBooksAsync();
-            List<BookViewModel> viewModels = new List<BookViewModel>();
+            List<BookModel> viewModels = new List<BookModel>();
             foreach(Book book in books)
             {
                 string borrowedBy = "";
@@ -47,7 +47,7 @@ namespace Library.Services
                         borrowedBy = reader != null ? $"{reader.FirstName} {reader.LastName}" : "";
                     }
                 }
-                viewModels.Add(new BookViewModel
+                viewModels.Add(new BookModel
                 {
                     Id = book.Id,
                     Title = book.Title,
@@ -58,26 +58,26 @@ namespace Library.Services
             }
             return viewModels;
         }
-        public async Task CreateAsync(BookViewModel bookViewModel)
+        public async Task CreateAsync(BookModel BookModel)
         {
             Book? book = new Book
             {
-                Id = bookViewModel.Id,
-                Title = bookViewModel.Title,
-                Author = bookViewModel.Author,
+                Id = BookModel.Id,
+                Title = BookModel.Title,
+                Author = BookModel.Author,
                 IsBorrowed = false,
             };
             await _bookRepo.AddAsync(book);
             await _bookRepo.SaveChangesAsync();
         }
-        public async Task UpdateAsync(BookViewModel bookViewModel)
+        public async Task UpdateAsync(BookModel BookModel)
         {
             Book? book = new Book
             {
-                Id = bookViewModel.Id,
-                Title = bookViewModel.Title,
-                Author = bookViewModel.Author,
-                IsBorrowed = bookViewModel.IsBorrowed
+                Id = BookModel.Id,
+                Title = BookModel.Title,
+                Author = BookModel.Author,
+                IsBorrowed = BookModel.IsBorrowed
             };
             _bookRepo.Update(book);
             await _bookRepo.SaveChangesAsync();
@@ -87,10 +87,10 @@ namespace Library.Services
             await _bookRepo.DeleteAsync(id);
             await _bookRepo.SaveChangesAsync();
         }
-        public async Task<List<BookViewModel>> GetAvailableBooksAsync()
+        public async Task<List<BookModel>> GetAvailableBooksAsync()
         {
             List<Book> books = await _bookRepo.GetAvailableBooksAsync();
-            return books.Select(book => new BookViewModel
+            return books.Select(book => new BookModel
             {
                 Id = book.Id,
                 Title = book.Title,
@@ -98,10 +98,10 @@ namespace Library.Services
                 IsBorrowed= book.IsBorrowed,
             }).ToList();
         }
-        public async Task<List<BookViewModel>> GetBorrowedBooksAsync()
+        public async Task<List<BookModel>> GetBorrowedBooksAsync()
         {
             List<Book> books = await _bookRepo.GetBorrowedBooksAsync();
-            return books.Select(book => new BookViewModel
+            return books.Select(book => new BookModel
             {
                 Id = book.Id,
                 Title = book.Title,

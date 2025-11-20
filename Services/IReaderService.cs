@@ -1,13 +1,13 @@
-﻿using Library.ViewModels;
+﻿using Library.Models;
 
 namespace Library.Services
 {
     public interface IReaderService
     {
-        Task<ReaderViewModel?> GetReaderByIdAsync(string id);
-        Task<List<ReaderViewModel>> GetAllReadersAsync();
-        Task CreateAsync(ReaderViewModel readerViewModel);
-        Task UpdateAsync(ReaderViewModel readerViewModel);
+        Task<ReaderModel?> GetReaderByIdAsync(string id);
+        Task<List<ReaderModel>> GetAllReadersAsync();
+        Task CreateAsync(ReaderModel readerViewModel);
+        Task UpdateAsync(ReaderModel readerViewModel);
         Task DeleteAsync(string id);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Library.Models;
 using Library.Repositories;
-using Library.ViewModels;
+using Library.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Library.Services
@@ -18,21 +18,21 @@ namespace Library.Services
             _bookRepository = bookRepository;
             _readerService = readerService;
         }
-        public async Task<List<AllLoansViewModel>> GetAllLoansAsync()
+        public async Task<List<LoanModel>> GetAllLoansAsync()
         {
             List<Loan> loans = await _loanRepository.GetAllLoansAsync();
 
-            List<AllLoansViewModel> loansViewModels = loans.Select(l => new AllLoansViewModel
+            List<LoanModel> loansViewModels = loans.Select(l => new LoanModel
             {
                 LoanId = l.Id,
                 LoanDate = l.LoanDate,
                 ReturnDate = l.ReturnDate,
-                Reader = new ReaderViewModel
+                Reader = new ReaderModel
                 {
                     FirstName = l.Reader.FirstName,
                     LastName = l.Reader.LastName
                 },
-                Book = new BookViewModel
+                Book = new BookModel
                 {
                     Title = l.Book.Title,
                 }
@@ -40,11 +40,11 @@ namespace Library.Services
 
             return loansViewModels;
         }
-        public async Task<LoanViewModel> PrepareLoanViewModelAsync()
+        public async Task<BorrowBookModel> PrepareBorrowBookModelAsync()
         {
-            List<ReaderViewModel> readers = await _readerService.GetAllReadersAsync();
-            List<BookViewModel> books = await _bookService.GetAvailableBooksAsync();
-            LoanViewModel viewModel = new LoanViewModel
+            List<ReaderModel> readers = await _readerService.GetAllReadersAsync();
+            List<BookModel> books = await _bookService.GetAvailableBooksAsync();
+            BorrowBookModel viewModel = new BorrowBookModel
             {
                 AvailableBooks = books,
                 Readers = readers
@@ -63,7 +63,7 @@ namespace Library.Services
             if (book == null || book.IsBorrowed)
                 throw new Exception("Kniha nie je dostupná.");
 
-            ReaderViewModel? reader = await _readerService.GetReaderByIdAsync(readerCardId);
+            ReaderModel? reader = await _readerService.GetReaderByIdAsync(readerCardId);
             if (reader == null)
                 throw new Exception("Čitateľ neexistuje.");
 
@@ -79,10 +79,10 @@ namespace Library.Services
             await _loanRepository.SaveChangesAsync();
             await _bookRepository.SaveChangesAsync();
         }
-        public async Task<ReturnViewModel> PrepareReturnViewModelAsync()
+        public async Task<ReturnBookModel> PrepareReturnBookModelAsync()
         {
-            List<BookViewModel> books = await _bookService.GetBorrowedBooksAsync();
-            ReturnViewModel viewModel = new ReturnViewModel
+            List<BookModel> books = await _bookService.GetBorrowedBooksAsync();
+            ReturnBookModel viewModel = new ReturnBookModel
             {
                 BorrowedBook = books
             };

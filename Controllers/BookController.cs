@@ -1,5 +1,5 @@
-﻿using Library.Services;
-using Library.ViewModels;
+﻿using Library.Models;
+using Library.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
@@ -13,51 +13,51 @@ namespace Library.Controllers
         }
         public async Task<IActionResult> GetRecords()
         {
-            List<BookViewModel> viewModels = await _bookService.GetAllBooksAsync();
+            List<BookModel> viewModels = await _bookService.GetAllBooksAsync();
             return View(viewModels);
         }
         public IActionResult AddRecord()
         {
-            BookViewModel bookViewModel = new BookViewModel();
-            return View(bookViewModel);
+            BookModel BookModel = new BookModel();
+            return View(BookModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddRecord(BookViewModel bookViewModel)
+        public async Task<IActionResult> AddRecord(BookModel BookModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(bookViewModel);
+                return View(BookModel);
             }
-            await _bookService.CreateAsync(bookViewModel);
+            await _bookService.CreateAsync(BookModel);
             TempData["Success"] = "Book was added.";
             return RedirectToAction("GetRecords");
         }
         public async Task<IActionResult> EditRecord(int id)
         {
-            BookViewModel? bookViewModel = await _bookService.GetBookByIdAsync(id);
-            if (bookViewModel == null)
+            BookModel? BookModel = await _bookService.GetBookByIdAsync(id);
+            if (BookModel == null)
                 return NotFound();
-            return View(bookViewModel);
+            return View(BookModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditRecord(BookViewModel bookViewModel)
+        public async Task<IActionResult> EditRecord(BookModel BookModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(bookViewModel);
+                return View(BookModel);
             }
-            await _bookService.UpdateAsync(bookViewModel);
+            await _bookService.UpdateAsync(BookModel);
             TempData["Success"] = "Book was edited.";
             return RedirectToAction("GetRecords");
         }
         public async Task<IActionResult> DeleteRecord(int id)
         {
-            BookViewModel? bookViewModel = await _bookService.GetBookByIdAsync(id);
-            if (bookViewModel == null)
+            BookModel? BookModel = await _bookService.GetBookByIdAsync(id);
+            if (BookModel == null)
                 return NotFound();
-            return View(bookViewModel);
+            return View(BookModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

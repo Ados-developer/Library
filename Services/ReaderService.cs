@@ -1,6 +1,7 @@
-﻿using Library.Models;
+﻿using Library.Entities;
+using Library.Models;
 using Library.Repositories;
-using Library.ViewModels;
+
 
 namespace Library.Services
 {
@@ -11,14 +12,14 @@ namespace Library.Services
         {
             _readerRepo = readerRepo;
         }
-        public async Task<ReaderViewModel?> GetReaderByIdAsync(string id)
+        public async Task<ReaderModel?> GetReaderByIdAsync(string id)
         {
             Reader? reader = await _readerRepo.GetReaderByIdAsync(id);
             if (reader == null)
             {
                 return null;
             }
-            ReaderViewModel viewModel = new ReaderViewModel
+            ReaderModel viewModel = new ReaderModel
             {
                 CardId = reader.CardId,
                 FirstName = reader.FirstName,
@@ -27,10 +28,10 @@ namespace Library.Services
             };
             return viewModel;
         }
-        public async Task<List<ReaderViewModel>> GetAllReadersAsync()
+        public async Task<List<ReaderModel>> GetAllReadersAsync()
         {
             List<Reader> readers = await _readerRepo.GetAllReadersAsync();
-            return readers.Select(reader => new ReaderViewModel
+            return readers.Select(reader => new ReaderModel
             {
                 CardId = reader.CardId,
                 FirstName = reader.FirstName,
@@ -38,26 +39,26 @@ namespace Library.Services
                 DateOfBirth = reader.DateOfBirth
             }).ToList();
         }
-        public async Task CreateAsync(ReaderViewModel readerViewModel)
+        public async Task CreateAsync(ReaderModel ReaderModel)
         {
             Reader? reader = new Reader
             {
-                CardId = readerViewModel.CardId,
-                FirstName = readerViewModel.FirstName,
-                LastName = readerViewModel.LastName,
-                DateOfBirth = readerViewModel.DateOfBirth
+                CardId = ReaderModel.CardId,
+                FirstName = ReaderModel.FirstName,
+                LastName = ReaderModel.LastName,
+                DateOfBirth = ReaderModel.DateOfBirth
             };
             await _readerRepo.AddAsync(reader);
             await _readerRepo.SaveChangesAsync();
         }
-        public async Task UpdateAsync(ReaderViewModel readerViewModel)
+        public async Task UpdateAsync(ReaderModel ReaderModel)
         {
             Reader? reader = new Reader
             {
-                CardId = readerViewModel.CardId,
-                FirstName = readerViewModel.FirstName,
-                LastName = readerViewModel.LastName,
-                DateOfBirth = readerViewModel.DateOfBirth
+                CardId = ReaderModel.CardId,
+                FirstName = ReaderModel.FirstName,
+                LastName = ReaderModel.LastName,
+                DateOfBirth = ReaderModel.DateOfBirth
             };
             _readerRepo.Update(reader);
             await _readerRepo.SaveChangesAsync();

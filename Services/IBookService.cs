@@ -1,15 +1,15 @@
-﻿using Library.ViewModels;
+﻿using Library.Models;
 
 namespace Library.Services
 {
     public interface IBookService
     {
-        Task<BookViewModel?> GetBookByIdAsync(int id);
-        Task<List<BookViewModel>> GetAllBooksAsync();
-        Task CreateAsync(BookViewModel bookViewModel);
-        Task UpdateAsync(BookViewModel bookViewModel);
+        Task<BookModel?> GetBookByIdAsync(int id);
+        Task<List<BookModel>> GetAllBooksAsync();
+        Task CreateAsync(BookModel BookModel);
+        Task UpdateAsync(BookModel BookModel);
         Task DeleteAsync(int id);
-        Task<List<BookViewModel>> GetAvailableBooksAsync();
-        Task<List<BookViewModel>> GetBorrowedBooksAsync();
+        Task<List<BookModel>> GetAvailableBooksAsync();
+        Task<List<BookModel>> GetBorrowedBooksAsync();
     }
 }
